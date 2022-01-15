@@ -23,25 +23,6 @@
   
   
   <entry>
-    <title>Java相关的各种零碎知识</title>
-    <link href="/2022/01/09/Java%E7%9B%B8%E5%85%B3%E7%9A%84%E5%90%84%E7%A7%8D%E9%9B%B6%E7%A2%8E%E7%9F%A5%E8%AF%86/"/>
-    <url>/2022/01/09/Java%E7%9B%B8%E5%85%B3%E7%9A%84%E5%90%84%E7%A7%8D%E9%9B%B6%E7%A2%8E%E7%9F%A5%E8%AF%86/</url>
-    
-    <content type="html"><![CDATA[<p>本文长期更新各种Java零碎的知识点（美好的愿望）。<br></p><p>为了防止以后被迫进入开发岗做码农，希望有零碎时间就可以看看Java各种</p> <span id="more"></span><h1 id="Java-小-tips-整理"><a href="#Java-小-tips-整理" class="headerlink" title="Java 小 tips 整理"></a>Java 小 tips 整理</h1><h2 id="System-out-println-Object-o"><a href="#System-out-println-Object-o" class="headerlink" title="System.out.println(Object o)"></a>System.out.println(Object o)</h2><p>有这样一段代码</p><figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span></span><br><span class="hljs-class"></span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Object o = <span class="hljs-string">&quot;abc&quot;</span>;<br>        System.out.println(o);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>凭感觉，我们认为打印结果应该是”abc”，当然，我们的感觉没错。</p><p>查看System.out.println(Object o)的源码，可以看到</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">println</span><span class="hljs-params">(Object x)</span> </span>&#123;<br>    String s = String.valueOf(x);<br>    <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) &#123;<br>        print(s);<br>        newLine();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>再去查看String.valueOf(Object)的源码，如下</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title">valueOf</span><span class="hljs-params">(Object obj)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> (obj == <span class="hljs-keyword">null</span>) ? <span class="hljs-string">&quot;null&quot;</span> : obj.toString();<br>&#125;<br></code></pre></td></tr></table></figure><p>似乎看到希望了。最后由于obj的运行时类型是Object的子类String，我们查看String类的toString方法，如下</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p><strong><u><em>成功√</em></u></strong></p>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>Java</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>《智能科学技术导论》复习资料</title>
     <link href="/2022/01/04/%E3%80%8A%E6%99%BA%E8%83%BD%E7%A7%91%E5%AD%A6%E6%8A%80%E6%9C%AF%E5%AF%BC%E8%AE%BA%E3%80%8B%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/"/>
     <url>/2022/01/04/%E3%80%8A%E6%99%BA%E8%83%BD%E7%A7%91%E5%AD%A6%E6%8A%80%E6%9C%AF%E5%AF%BC%E8%AE%BA%E3%80%8B%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/</url>

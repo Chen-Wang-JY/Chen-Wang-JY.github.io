@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Java集合概述</title>
+    <link href="/2022/01/22/Java%E9%9B%86%E5%90%88/"/>
+    <url>/2022/01/22/Java%E9%9B%86%E5%90%88/</url>
+    
+    <content type="html"><![CDATA[<p>Loading……为了防止以后被迫进入开发岗做码农，希望有零碎时间就可以看看Java各种。</p> <span id="more"></span><hr><p>相比于C++ STL来说，Java的集合架构给我的感觉是更有条理。连源码看起来都很好看（还没到深入源码的地步），感觉自己的编码风格都要受到影响了   :-(</p><h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>Java中的两大接口Collection，Map</p><p><img src="https://cdn.jsdelivr.net/gh/Chen-Wang-JY/pictures@main/img/202201211508789.png" alt="img"></p><p><img src="https://cdn.jsdelivr.net/gh/Chen-Wang-JY/pictures@main/img/202201211509584.png" alt="image-20220121150955536"></p><h1 id="二、Collection接口"><a href="#二、Collection接口" class="headerlink" title="二、Collection接口"></a>二、Collection接口</h1><p>Collection接口没有直接实现的子类。但其子接口List或者Set有直接实现类。</p><p>Collection接口规定了一些简单的方法，并没有指明具体的存储结构，因此不提供取元素等方法(如get()、indexOf())</p><h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><blockquote><ul><li><p>add remove contains size isEmpty clear</p></li><li><p>addAll containsAll removeAll</p><blockquote><p>*All方法的参数必须是实现了Collection接口的对象。</p></blockquote></li></ul></blockquote><h2 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h2><p>Collection接口继承自Iterable接口，所以可以通过迭代器Iterator遍历。</p><p>迭代器有hasNext()与next()方法</p><blockquote><p>顾名思义</p><p>不过要注意的是，调用next()前记得调用hasNext()方法，否则可能会抛出NoSuchElementException异常</p></blockquote><p>通过调用Collection接口的iterator()方法，获得集合迭代器。</p><figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>    Collection&lt;Integer&gt; list = <span class="hljs-keyword">new</span> LinkedList&lt;&gt;();<br>    list.add(<span class="hljs-number">3</span>);<br>    list.add(<span class="hljs-number">4</span>);<br>    list.add(<span class="hljs-number">1</span>);<br>    list.add(<span class="hljs-number">5</span>);<br><br>    Iterator iterator = list.iterator();<br>    <span class="hljs-keyword">while</span>(iterator.hasNext())&#123;<br>        System.out.println(iterator.next());<br>    &#125;<br>    System.out.println(iterator.next());<br>&#125;<br></code></pre></td></tr></table></figure><p>当然也可以通过增强for循环去遍历。</p><h1 id="三、List接口"><a href="#三、List接口" class="headerlink" title="三、List接口"></a>三、List接口</h1><p>List接口的实现类有一些特点：</p><ul><li>集合中元素有序（添加顺序与取出顺序一致）。</li><li>可以存在重复元素。</li><li>每个元素都有对应的顺序索引，可以通过get方法返回</li></ul><h2 id="常用方法-1"><a href="#常用方法-1" class="headerlink" title="常用方法"></a>常用方法</h2><p>除Collection提供的方法外(有一些重载，如add()，由于指明了具体的存储结构，因此可以在指定index处add了)，还有一些新增方法：</p><ul><li><p>get()</p></li><li><p>indexOf()、lastIndexOf()</p><blockquote><p>c++没有欸</p></blockquote></li></ul><h2 id="遍历-1"><a href="#遍历-1" class="headerlink" title="遍历"></a>遍历</h2><ul><li>增强for</li><li>由于List是Collection的子接口，因此可以使用Iterator遍历</li><li>通过索引</li></ul><h2 id="三个主要的实现类"><a href="#三个主要的实现类" class="headerlink" title="三个主要的实现类"></a>三个主要的实现类</h2><h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><ul><li><p>基于数组实现</p></li><li><p>存储元素的数组为</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">transient</span> Object[] elementData;<br></code></pre></td></tr></table></figure><blockquote><p>transient修饰词以后再看吧</p></blockquote></li><li><p>线程不安全</p></li><li><p>扩容机制与STL的Vector有一点不同，ArrayList每次扩容为原容量1.5倍</p></li></ul><h3 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h3><ul><li>基于数组实现</li><li>线程安全，方法使用synchronized修饰</li><li>扩容机制与STL的Vector一致，2倍扩容。</li></ul><h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><ul><li>底层实现了双向链表和双端队列的特点</li><li>线程不安全</li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Loading~</title>
     <link href="/2022/01/21/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
     <url>/2022/01/21/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/</url>

@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/avatar.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="介绍线段树的原理，实现了线段树的泛型模板。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线段树">
+<meta property="og:url" content="http://example.com/2022/02/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95_%E7%BA%BF%E6%AE%B5%E6%A0%91/index.html">
+<meta property="og:site_name" content="晨">
+<meta property="og:description" content="介绍线段树的原理，实现了线段树的泛型模板。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-26T14:18:30.000Z">
+<meta property="article:modified_time" content="2022-03-31T14:14:31.894Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="数据结构与算法">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>线段树 - 晨</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Chen&#39;s secret world</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/message/">
+                <i class="iconfont icon-book"></i>
+                留言
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/welCome.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="线段树">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-26 22:18" pubdate>
+        2022年2月26日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      69 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">线段树</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：19 小时前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <blockquote>
+<p>花了半天多的时间看了线段树的理论，并造了一个大大的轮子<br />
+–2022.2.26 18:04</p>
+<p>今天听完了y总版本的线段树。y总的代码风格真的清晰，编码思路与本文的思路略有不同（主要区别在于方法的参数数量较少，原因是使用单独的结构表示了线段树节点，从而在结构中存储了更多信息）。</p>
+<p>如果以后变勤快了的话，再把y总版本加到这里吧。</p>
+<p>​																			--2022.3.31 17:24</p>
+</blockquote>
+<h2 id="1-背景"><a class="markdownIt-Anchor" href="#1-背景"></a> 1. 背景</h2>
+<p>假设数组<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo>=</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>8</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>9</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">data = \{1, 6, 3, 4, 8, 2, 9\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">8</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">9</span><span class="mclose">}</span></span></span></span>，当我们需要对数组进行频繁的元素更新、查询某一区间的最大/最小值时，暴力的方法允许在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>时间内完成单点修改与区间查询。</p>
+<p>我们可以使用线段树存储数组元素，此时更新与区间查询的时间复杂度均为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(logn)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>.</p>
+<h2 id="2-概述"><a class="markdownIt-Anchor" href="#2-概述"></a> 2. 概述</h2>
+<p>线段树(segment tree)，是用来存放给定区间内对应信息的一种非常灵活的数据结构。使用数组来存储树型结构，支持区间查询与单点修改。允许在对数时间内从数组中找到最小值、最大值、总和、最大公约数、最小公倍数等。</p>
+<h2 id="3-线段树的特点与原理"><a class="markdownIt-Anchor" href="#3-线段树的特点与原理"></a> 3. 线段树的特点与原理</h2>
+<p>线段树是一个平衡二叉树，但不一定是完全二叉树。当数组<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">data</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span></span></span></span>的长度是2的整数次幂时，线段树成为满二叉树。同时，这也就决定了线段树可以采用顺序的数组结构存储。</p>
+<p><strong>线段树的节点</strong>：线段树的每个非叶子节点存储了一段区间的信息（如最大值/最小值），每个叶子节点对应数组<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">data</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span></span></span></span>的一个元素（叶子节点也可以看作是区间信息，只不过这个区间的左右端点值相等）。</p>
+<p>具体来说，线段树的根节点代表整个数组所在区间的信息，即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo stretchy="false">[</mo><mn>0</mn><mo>:</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">data[0: N - 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>（含N）所对应的信息。</p>
+<p>将区间均分成两半，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>i</mi><mi>d</mi><mo>=</mo><mfrac><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">mid = \frac{N - 1}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">d</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.217331em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.872331em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>，根节点的左孩子节点存储<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo stretchy="false">[</mo><mn>0</mn><mo>:</mo><mi>m</mi><mi>i</mi><mi>d</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">data[0:mid]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">d</span><span class="mclose">]</span></span></span></span>区间的信息；右孩子节点存储<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo stretchy="false">[</mo><mi>m</mi><mi>i</mi><mi>d</mi><mo>+</mo><mn>1</mn><mo>:</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">data[mid+1:N-1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">d</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>区间的信息。也正是因为这样的均分策略，最终构造出的树才是平衡二叉树。</p>
+<p><strong>线段树的额外空间</strong>：我们已经知道了线段树的叶子节点存储的是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">data</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span></span></span></span>中的元素值。如果说平衡二叉树有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>个叶子节点的话，那么需要<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">4n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord mathdefault">n</span></span></span></span>的连续空间存储整棵树。</p>
+<blockquote>
+<p>一棵层数为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>的满二叉树，其第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>层的节点数为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">2^{n-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>，前<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>层的节点<strong>总数</strong>为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{n - 1} - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>，也就是说，整棵树的节点数大约是最后一层节点数的2倍。<br />
+若存在第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>层，则第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>层的节点数也将会是第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>层的2倍。r</p>
+<p>由于线段树是平衡二叉树，不一定是满二叉树，因此若有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>个叶子节点的话，需要多开辟一层的存储空间，即4倍叶子节点数的额外空间大小。</p>
+</blockquote>
+<h2 id="4-建树"><a class="markdownIt-Anchor" href="#4-建树"></a> 4. 建树</h2>
+<p>线段树的创建是自下而上进行的。一个节点所存储的信息完全由其左右孩子决定。当左右孩子所存储信息确定时，该节点所存储的信息即可确定。</p>
+<p>假如左孩子存储的是区间<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[a, b]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">b</span><span class="mclose">]</span></span></span></span>的最小值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>，右孩子存储的是区间<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[b, c]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathdefault">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">c</span><span class="mclose">]</span></span></span></span>的最小值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span></span>，那么父节点存储的区间<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mi>a</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[a, c]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">c</span><span class="mclose">]</span></span></span></span>的最小值就可以由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>i</mi><mi>n</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">min(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>唯一确定。由此自底向上，就可以完成建树了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">buildSegmentTree</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight, T[] data)</span></span>&#123;<br>    <span class="hljs-comment">//此时是叶子节点</span><br>    <span class="hljs-keyword">if</span>(dataLeft == dataRight)&#123;<br>        tree[treeNode] = data[dataLeft];<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-comment">//得到左右子树的顺序索引</span><br>    <span class="hljs-keyword">int</span> left = getLeft(treeNode);<br>    <span class="hljs-keyword">int</span> right = getRight(treeNode);<br>    <span class="hljs-comment">//得到数据的中间索引，如果begin和end很大，相加求和除二的方法可能会溢出。</span><br>    <span class="hljs-keyword">int</span> mid = dataLeft + (dataRight - dataLeft) / <span class="hljs-number">2</span>;<br>    <span class="hljs-comment">//构建左子树</span><br>    buildSegmentTree(left, dataLeft, mid, data);<br>    <span class="hljs-comment">//构建右子树</span><br>    buildSegmentTree(right, mid + <span class="hljs-number">1</span>, dataRight, data);<br>    <span class="hljs-comment">//修改当前节点值</span><br>    tree[treeNode] = merger.merge(tree[left], tree[right]);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在构造方法中，可以调用如下语句递归的创建线段树。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">buildSegmentTree(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, data.length - <span class="hljs-number">1</span>, data);<br></code></pre></td></tr></table></figure>
+<h2 id="5-更新"><a class="markdownIt-Anchor" href="#5-更新"></a> 5. 更新</h2>
+<p>当我们想更新原始数据数组<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">data</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span></span></span></span>的某一处的值时，首先要在线段树中确定该值对应的叶子节点索引，之后自底向上的更新路径上的其他节点信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">_update</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> dataIndex, T newValue, <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>treeNode是当前树节点索引——调用更新时应初始化为0</li>
+<li>dataIndex是想要更新的原始数据索引</li>
+<li>newValue是更新后的值</li>
+<li>dataLeft与dataRight是当前树节点treeNode所表示的区间信息的左右端点。</li>
+</ul>
+<p>因此，调用线段树更新操作的对外接口update方法体如下。从根节点treeNode=0处，将原始数据索引为dataIndex的数据更新为newValue。由于根节点所表示的区间为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo stretchy="false">[</mo><mn>0</mn><mo>:</mo><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi>L</mi><mi>e</mi><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">data[0:dataLen-1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">L</span><span class="mord mathdefault">e</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>，因此后两个参数也就确定了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(<span class="hljs-keyword">int</span> dataIndex, T newValue)</span></span>&#123;<br>    _update(<span class="hljs-number">0</span>, dataIndex, newValue, <span class="hljs-number">0</span>, dataLen - <span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>对于_update方法，方法体如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">_update</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> dataIndex, T newValue, <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(dataLeft == dataRight)&#123;<br>        tree[treeNode] = newValue;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">int</span> leftChildNode = getLeft(treeNode);<br>    <span class="hljs-keyword">int</span> rightChildNode = getRight(treeNode);<br>    <span class="hljs-keyword">int</span> mid = dataLeft + (dataRight - dataLeft) / <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">if</span>(dataIndex &lt;= mid)&#123;<br>        _update(leftChildNode, dataIndex, newValue, dataLeft, mid);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        _update(rightChildNode, dataIndex, newValue, mid + <span class="hljs-number">1</span>, dataRight);<br>    &#125;<br>    <span class="hljs-comment">//修改完子树更新当前节点</span><br>    tree[treeNode] = merger.merge(tree[leftChildNode], tree[rightChildNode]);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>从根节点开始，找到左右孩子所表示的区间信息，若要更新的节点落在左孩子节点所表示的区间内，则以左孩子为根节点递归的调用_update方法。反之则更新右子树。最后修改当前节点的相关信息。</p>
+<p>递归直至dataLeft与dataRight相等终止，即当前节点treeNode是叶子节点，此时寻找到了待更新节点。</p>
+<h2 id="6-查询"><a class="markdownIt-Anchor" href="#6-查询"></a> 6. 查询</h2>
+<p>查询query方法对外的调用接口以及_query的方法的声明如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//query方法</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">query</span><span class="hljs-params">(<span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> _query(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, dataLen - <span class="hljs-number">1</span>, dataLeft, dataRight);<br>&#125;<br><br><span class="hljs-comment">//_query方法声明</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> T <span class="hljs-title">_query</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> treeLeft, <span class="hljs-keyword">int</span> treeRight, <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>treeNode: 线段树的某一节点索引，查询开始时应从根节点0开始。</li>
+<li>treeLeft与treeRight：线段树当前节点所表示的区间左右端点，查询开始时应初始化为0与dataLen - 1.</li>
+<li>dataLeft与dataRight：要查询的区间信息的左右端点。</li>
+</ul>
+<p>由于线段树特殊的区间均分方法，使得查询时出现了四种情况。</p>
+<p>1)如果查询区间与当前节点所表示的区间完全吻合，则可以直接返回当前节点的信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(treeLeft == dataLeft &amp;&amp; treeRight == dataRight)&#123;<br>    <span class="hljs-keyword">return</span> tree[treeNode];<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>2)如果查询区间完全位于当前节点左孩子所表示区间中，则以左子树为根节点，递归地调用查询方法。需要注意的是，此时_query方法的参数2与参数3分别为treeLeft、mid，即左孩子所表示的区间左右端点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> leftChildNode = getLeft(treeNode);<br><span class="hljs-keyword">int</span> rightChildNode = getRight(treeNode);<br><span class="hljs-keyword">int</span> mid = treeLeft + (treeRight - treeLeft) / <span class="hljs-number">2</span>;<br><br><span class="hljs-comment">//2.查询区间完全在左子树所表示区间，则去左子树查询</span><br><span class="hljs-keyword">if</span>(dataRight &lt;= mid)&#123;<br>    <span class="hljs-keyword">return</span> _query(leftChildNode, treeLeft, mid, dataLeft, dataRight);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>3)如果查询区间完全位于当前节点右孩子所表示区间中，则以右子树为根节点，递归调用查询方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(dataLeft &gt;= mid + <span class="hljs-number">1</span>)&#123;<br>    <span class="hljs-keyword">return</span> _query(rightChildNode, mid + <span class="hljs-number">1</span>, treeRight, dataLeft, dataRight);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>4)最后，如果查询区间同时覆盖了左右子树所表示区间的部分，则应该在左子树中查询区间<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi>L</mi><mi>e</mi><mi>f</mi><mi>t</mi><mo separator="true">,</mo><mi>m</mi><mi>i</mi><mi>d</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[dataLeft, mid]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">L</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">d</span><span class="mclose">]</span></span></span></span>，在右子树中查询区间<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mi>m</mi><mi>i</mi><mi>d</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi>R</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[mid + 1, dataRight]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">d</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">h</span><span class="mord mathdefault">t</span><span class="mclose">]</span></span></span></span>，最后将查询到的结果<strong>合并</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">T leftValue = _query(leftChildNode, treeLeft, mid, dataLeft, mid);<br>T rightValue = _query(rightChildNode, mid + <span class="hljs-number">1</span>, treeRight, mid + <span class="hljs-number">1</span>, dataRight);<br><span class="hljs-keyword">return</span> merger.merge(leftValue, rightValue);<br></code></pre></td></tr></table></figure>
+<h2 id="7-完整代码"><a class="markdownIt-Anchor" href="#7-完整代码"></a> 7. 完整代码</h2>
+<p>最后，线段树的代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.chen.datastructure;<br><br><span class="hljs-keyword">import</span> com.chen.datastructure.SegmentTree.Merger;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SegmentTree</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br><br>    <span class="hljs-keyword">private</span> T[] tree;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> dataLen;<br>    <span class="hljs-keyword">private</span> Merger&lt;T&gt; merger;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 对于自定义数据类型T的线段树，需要给出合并时的动作</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> &lt;T&gt; 线段树的数据类型</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Merger</span>&lt;<span class="hljs-title">T</span>&gt;</span>&#123;<br>        <span class="hljs-function">T <span class="hljs-title">merge</span><span class="hljs-params">(T a, T b)</span></span>;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SegmentTree</span><span class="hljs-params">(T[] data, Merger&lt;T&gt; merger)</span></span>&#123;<br>        <span class="hljs-keyword">this</span>.merger = merger;<br>        <span class="hljs-keyword">this</span>.tree = (T[]) <span class="hljs-keyword">new</span> Object[data.length * <span class="hljs-number">4</span>];<br>        <span class="hljs-keyword">this</span>.dataLen = data.length;<br>        buildSegmentTree(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, data.length - <span class="hljs-number">1</span>, data);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 从节点index开始，对原始数据数据构建线段树。</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> treeNode 当前节点索引</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataLeft 原始数据数组的左端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataRight 原始数据数组的右端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> data 原始数据数组</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">buildSegmentTree</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight, T[] data)</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(dataLeft == dataRight)&#123;<br>            tree[treeNode] = data[dataLeft];<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">//得到左右子树的顺序索引</span><br>        <span class="hljs-keyword">int</span> left = getLeft(treeNode);<br>        <span class="hljs-keyword">int</span> right = getRight(treeNode);<br>        <span class="hljs-comment">//得到数据的中间索引，如果begin和end很大，相加求和除二的方法可能会溢出。</span><br>        <span class="hljs-keyword">int</span> mid = dataLeft + (dataRight - dataLeft) / <span class="hljs-number">2</span>;<br>        <span class="hljs-comment">//构建左子树</span><br>        buildSegmentTree(left, dataLeft, mid, data);<br>        <span class="hljs-comment">//构建右子树</span><br>        buildSegmentTree(right, mid + <span class="hljs-number">1</span>, dataRight, data);<br>        <span class="hljs-comment">//修改当前节点值</span><br>        tree[treeNode] = merger.merge(tree[left], tree[right]);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getLeft</span><span class="hljs-params">(<span class="hljs-keyword">int</span> index)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * index + <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getRight</span><span class="hljs-params">(<span class="hljs-keyword">int</span> index)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * index + <span class="hljs-number">2</span>;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 对原始索引为dataIndex的数据值更改。</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataIndex 要更改的原始数据索引</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> newValue 更改后的值</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(<span class="hljs-keyword">int</span> dataIndex, T newValue)</span></span>&#123;<br>        _update(<span class="hljs-number">0</span>, dataIndex, newValue, <span class="hljs-number">0</span>, dataLen - <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 内部修改逻辑</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> treeNode 当前节点的索引</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataIndex 要修改的数据的原始索引</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> newValue 要修改的值</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataLeft 数据区间左端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataRight 数据区间右端点</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">_update</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> dataIndex, T newValue, <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(dataLeft == dataRight)&#123;<br>            tree[treeNode] = newValue;<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">int</span> leftChildNode = getLeft(treeNode);<br>        <span class="hljs-keyword">int</span> rightChildNode = getRight(treeNode);<br>        <span class="hljs-keyword">int</span> mid = dataLeft + (dataRight - dataLeft) / <span class="hljs-number">2</span>;<br>        <span class="hljs-keyword">if</span>(dataIndex &lt;= mid)&#123;<br>            _update(leftChildNode, dataIndex, newValue, dataLeft, mid);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            _update(rightChildNode, dataIndex, newValue, mid + <span class="hljs-number">1</span>, dataRight);<br>        &#125;<br>        <span class="hljs-comment">//修改完子树更新当前节点</span><br>        tree[treeNode] = merger.merge(tree[leftChildNode], tree[rightChildNode]);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 线段树的区间查询</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataLeft 查询区间左端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataRight 查询区间右端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 查询结果</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">query</span><span class="hljs-params">(<span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> _query(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, dataLen - <span class="hljs-number">1</span>, dataLeft, dataRight);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 内部的区间查询逻辑</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> treeNode 当前treeNode的索引</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> treeLeft 当前treeNode所表示区间的左端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> treeRight 当前treeNode所表示区间的右端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataLeft 查询区间左端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> dataRight 查询区间的右端点</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 查询结果</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> T <span class="hljs-title">_query</span><span class="hljs-params">(<span class="hljs-keyword">int</span> treeNode, <span class="hljs-keyword">int</span> treeLeft, <span class="hljs-keyword">int</span> treeRight,</span></span><br><span class="hljs-params"><span class="hljs-function">                     <span class="hljs-keyword">int</span> dataLeft, <span class="hljs-keyword">int</span> dataRight)</span></span>&#123;<br>        <span class="hljs-comment">//1.查询区间完全与当前node节点所表示区间重合</span><br>        <span class="hljs-keyword">if</span>(treeLeft == dataLeft &amp;&amp; treeRight == dataRight)&#123;<br>            <span class="hljs-keyword">return</span> tree[treeNode];<br>        &#125;<br><br>        <span class="hljs-keyword">int</span> leftChildNode = getLeft(treeNode);<br>        <span class="hljs-keyword">int</span> rightChildNode = getRight(treeNode);<br>        <span class="hljs-keyword">int</span> mid = treeLeft + (treeRight - treeLeft) / <span class="hljs-number">2</span>;<br><br>        <span class="hljs-comment">//2.查询区间完全在左子树所表示区间，则去左子树查询</span><br>        <span class="hljs-keyword">if</span>(dataRight &lt;= mid)&#123;<br>            <span class="hljs-keyword">return</span> _query(leftChildNode, treeLeft, mid, dataLeft, dataRight);<br>        &#125;<br>        <span class="hljs-comment">//3.查询区间完全在右子树所表示区间，则去右子树查询</span><br>        <span class="hljs-keyword">if</span>(dataLeft &gt;= mid + <span class="hljs-number">1</span>)&#123;<br>            <span class="hljs-keyword">return</span> _query(rightChildNode, mid + <span class="hljs-number">1</span>, treeRight, dataLeft, dataRight);<br>        &#125;<br>        <span class="hljs-comment">//4.查询区间一般在左子树，一半在右子树</span><br>        <span class="hljs-comment">//此时，应该去左子树查询dataLeft至左子树所表示区间的右端点——mid，去右子树查询右子树所表示区间的左端点——mid+1至dataRight</span><br>        <span class="hljs-comment">//并merge</span><br>        T leftValue = _query(leftChildNode, treeLeft, mid, dataLeft, mid);<br>        T rightValue = _query(rightChildNode, mid + <span class="hljs-number">1</span>, treeRight, mid + <span class="hljs-number">1</span>, dataRight);<br>        <span class="hljs-keyword">return</span> merger.merge(leftValue, rightValue);<br>    &#125;<br><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">for</span>(T num: tree)&#123;<br>            System.out.print(num + <span class="hljs-string">&quot; &quot;</span>);<br>        &#125;<br>        System.out.println();<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/01/%E7%A2%8E%E7%89%87&amp;%5B%E8%AF%AD%E8%A8%80,%20Java%5D_Java%E5%BF%AB%E9%80%9F%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java快速的输入输出</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/24/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x03/">
+                        <span class="hidden-mobile">随手记0x03</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/twikoo@1/dist/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"blog-4g5o09vkf7c80443","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.plugins.initFancyBox('#twikoo .tk-content img:not(.tk-owo-emotion)');
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

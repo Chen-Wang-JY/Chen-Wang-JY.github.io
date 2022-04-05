@@ -29,6 +29,31 @@
   
   
   <entry>
+    <title>随手记0x05</title>
+    <link href="/2022/03/19/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x05/"/>
+    <url>/2022/03/19/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x05/</url>
+    
+    <content type="html"><![CDATA[<p>今天在写算法题目的时候，创建了一个存放整型数的ArrayList</p><blockquote><p>ArrayList&lt;Integer&gt; nums</p></blockquote><p>因为涉及到了nums中元素的比较操作，debug半个多小时也找不到错误在哪里。</p><p>最后，</p><p>最后发现，我使用了&quot;==&quot;来判断两元素是否相等（可能我默认认为nums中存放的是int而非Integer）…</p><p><strong>以后一定要记得</strong>，一定，一定要用，一定要记得用</p><figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs java">Objects.equals(nums.get(index1), nums.get(index2));<br></code></pre></td></tr></table></figure><blockquote><p>我好愚蠢   😦</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>随手记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Java快速的输入输出</title>
     <link href="/2022/03/01/%E7%A2%8E%E7%89%87&amp;%5B%E8%AF%AD%E8%A8%80,%20Java%5D_Java%E5%BF%AB%E9%80%9F%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/"/>
     <url>/2022/03/01/%E7%A2%8E%E7%89%87&amp;%5B%E8%AF%AD%E8%A8%80,%20Java%5D_Java%E5%BF%AB%E9%80%9F%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>
@@ -83,9 +108,9 @@
   
   
   <entry>
-    <title>随手记0x03</title>
-    <link href="/2022/02/24/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x03/"/>
-    <url>/2022/02/24/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x03/</url>
+    <title>随手记0x04</title>
+    <link href="/2022/02/24/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x04/"/>
+    <url>/2022/02/24/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x04/</url>
     
     <content type="html"><![CDATA[<h2 id="注解annotation"><a class="markdownIt-Anchor" href="#注解annotation"></a> 注解(Annotation)</h2><p>从JDK5.0开始，Java增加了注解。</p><p>注解其实就是代码里的特殊标记。这些标记可以在编译、类加载、运行时被读取，并执行相应处理。</p><ul><li><p>@Override: 在编译阶段就可以检查一个方法是否正确继承自其父类，如果被Override修饰的重写方法并非继承自父类，则编译阶段会报错。</p></li><li><p>@Deprecated：被@Deprecated修饰的方法在使用时会出现提示：过时的方法，建议不要使用</p><p><img src="https://cdn.jsdelivr.net/gh/Chen-Wang-JY/pictures@main/img/202204011112313.png" alt="image-20220401111230261" /></p></li><li><p>@SuppressWarnings：抑制编译器警告，可以添加具体的警告类型参数。</p><p>在未添加注解时，警告变量y未曾使用过。</p><p><img src="https://cdn.jsdelivr.net/gh/Chen-Wang-JY/pictures@main/img/202204011115831.png" alt="image-20220401111518793" /></p><p>当我们添加注解后，可以看到编译器对上述警告视而不见。</p><p><img src="https://cdn.jsdelivr.net/gh/Chen-Wang-JY/pictures@main/img/202204011121257.png" alt="image-20220401112159226" /></p></li></ul><hr /><blockquote><p>这里坑好深，日后再填吧。</p></blockquote>]]></content>
     
@@ -100,6 +125,31 @@
     <tags>
       
       <tag>java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>随手记0x03</title>
+    <link href="/2022/02/16/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x03/"/>
+    <url>/2022/02/16/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x03/</url>
+    
+    <content type="html"><![CDATA[<p>当我们想要设计下面这样的图案时，单纯的将div转成块元素并增加padding或者margin是很难通过定位去对齐的。</p><img src="https://cdn.jsdelivr.net/gh/Chen-Wang-JY/pictures@main/img/202202141950273.png" alt="image-20220214195030170" style="zoom:50%;" /><p>不过鉴于CSS中可以很简单的margin:0 auto实现居中，因此可以设计前景与背景。背景不需要margin与padding，而前景则可以通过margin:0 auto实现在背景div中的居中。</p><blockquote><p>太妙了。</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>随手记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>前端</tag>
       
     </tags>
     

@@ -33,7 +33,7 @@
     <link href="/2022/03/19/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x05/"/>
     <url>/2022/03/19/%E9%9A%8F%E6%89%8B%E8%AE%B0_%E9%9A%8F%E6%89%8B%E8%AE%B00x05/</url>
     
-    <content type="html"><![CDATA[<p>今天在写算法题目的时候，创建了一个存放整型数的ArrayList</p><blockquote><p>ArrayList&lt;Integer&gt; nums</p></blockquote><p>因为涉及到了nums中元素的比较操作，debug半个多小时也找不到错误在哪里。</p><p>最后，</p><p>最后发现，我使用了&quot;==&quot;来判断两元素是否相等（可能我默认认为nums中存放的是int而非Integer）…</p><p><strong>以后一定要记得</strong>，一定，一定要用，一定要记得用</p><figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs java">Objects.equals(nums.get(index1), nums.get(index2));<br></code></pre></td></tr></table></figure><blockquote><p>我好愚蠢   😦</p></blockquote>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>这可能是毫无逻辑的一篇…随笔？</p></blockquote><h1 id="唉"><a class="markdownIt-Anchor" href="#唉"></a> 唉</h1><p>今天在写算法题目的时候，创建了一个存放整型数的ArrayList</p><blockquote><p>ArrayList&lt;Integer&gt; nums</p></blockquote><p>因为涉及到了nums中元素的比较操作，debug半个多小时也找不到错误在哪里。</p><p>最后，</p><p>最后发现，我使用了&quot;==&quot;来判断两元素是否相等（可能我默认认为nums中存放的是int而非Integer）…</p><p><strong>以后一定要记得</strong>，一定，一定要用，一定要记得用</p><figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs java">Objects.equals(nums.get(index1), nums.get(index2));<br></code></pre></td></tr></table></figure><blockquote><p>我好愚蠢   😦</p></blockquote>]]></content>
     
     
     <categories>
